@@ -143,6 +143,49 @@ interface IBuyer {
 - `phone` – контактный телефон;  
 - `address` – адрес доставки.
 
+### Интерфейс ответа сервера со списком товаров
+```ts
+interface IProductsResponse {
+  items: IProduct[];
+}
+```
+Содержит массив товаров, возвращаемый сервером при запросе каталога.
+
+### Интерфейс запроса на оформление заказа
+```ts
+interface IOrderRequest {
+  items: string[];
+  payment: TPayment;
+  email: string;
+  phone: string;
+  address: string;
+  total: number;
+}
+```
+- `items` – массив идентификаторов выбранных товаров;
+- `payment` – выбранный способ оплаты;  
+- `email` – адрес электронной почты;  
+- `phone` – контактный телефон;  
+- `address` – адрес доставки;
+- `total` – сумма заказа.
+
+### Интерфейс ответа сервера при успешном заказе
+```ts
+interface IOrderResponse {
+  id: string;
+  total: number;
+}
+```
+- `id` – уникальный идентификатор оформленного заказа;
+- `total` – сумма заказа.
+
+### Интерфейс API-клиента
+```ts
+interface IApi {
+    get<T extends object>(uri: string): Promise<T>;
+    post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
+}
+```
 
 ## Модели данных
 
@@ -210,7 +253,7 @@ interface IBuyer {
 `constructor(api: IApi)` – принимает объект, реализующий `IApi`, через который выполняются все HTTP-запросы.
 
 Методы:
-- `getProducts(): Promise<{ items: IProduct[] }>` – выполняет GET-запрос на эндпоинт `/product/`, возвращает промис с объектом, содержащим массив товаров.
+- `getProducts(): Promise<IProductsResponse>` – выполняет GET-запрос на эндпоинт `/product/`, возвращает промис с объектом `IProductsResponse`.
 - `orderProducts(data: IOrderRequest): Promise<IOrderResponse>` – выполняет POST-запрос на эндпоинт `/order/`, передавая в теле запроса объект заказа, и возвращает промис с подтверждением (идентификатор заказа и итоговая сумма).
 
 Используемые типы:
